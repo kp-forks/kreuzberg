@@ -226,6 +226,9 @@ jobs:
         shell: pwsh
         run: scripts/ci/go/setup-msys2-windows.ps1
 
+      - name: Install Task
+        uses: ./.github/actions/install-task
+
       - name: Build or restore FFI from cache
         id: ffi
         uses: ./.github/actions/build-and-cache-ffi

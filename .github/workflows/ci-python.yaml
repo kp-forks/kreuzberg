@@ -198,6 +198,9 @@ jobs:
         shell: bash
         run: scripts/ci/python/clean-artifacts.sh
 
+      - name: Install Task
+        uses: ./.github/actions/install-task
+
       - name: Build or restore FFI from cache
         id: ffi
         uses: ./.github/actions/build-and-cache-ffi
