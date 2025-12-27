@@ -29,12 +29,19 @@ tasks:
   build:
     desc: Build WASM bindings for Node.js target (uses {{.BUILD_PROFILE}})
     dir: crates/kreuzberg-wasm
+    env:
+      # WASM builds use their own rustflags from .cargo/config.toml for the wasm32-unknown-unknown target.
+      # Unsetting RUSTFLAGS prevents flags from parent environment (e.g., profiling flags) from interfering
+      # with WASM compilation or leaking to subsequent non-WASM builds.
+      RUSTFLAGS:
     cmds:
       - pnpm run build
 
   build:dev:
     desc: Build WASM bindings in debug mode
     dir: crates/kreuzberg-wasm
+    env:
+      RUSTFLAGS:
     cmds:
       - pnpm run build
 
@@ -43,6 +50,7 @@ tasks:
     dir: crates/kreuzberg-wasm
     env:
       NODE_ENV: production
+      RUSTFLAGS:
     cmds:
       - pnpm run build
 
@@ -51,41 +59,55 @@ tasks:
     dir: crates/kreuzberg-wasm
     env:
       NODE_ENV: production
+      RUSTFLAGS:
     cmds:
       - pnpm run build --minify
 
   build:web:
     desc: Build WASM for web browsers
     dir: crates/kreuzberg-wasm
+    env:
+      RUSTFLAGS:
     cmds:
       - pnpm run build:wasm:web
 
   build:bundler:
     desc: Build WASM for bundlers (webpack, rollup, etc)
     dir: crates/kreuzberg-wasm
+    env:
+      RUSTFLAGS:
     cmds:
       - pnpm run build:wasm:bundler
 
   build:nodejs:
     desc: Build WASM for Node.js
     dir: crates/kreuzberg-wasm
+    env:
+      RUSTFLAGS:
     cmds:
       - pnpm run build:wasm:nodejs
 
   build:deno:
     desc: Build WASM for Deno
     dir: crates/kreuzberg-wasm
+    env:
+      RUSTFLAGS:
     cmds:
       - pnpm run build:wasm:deno
 
   build:all:
     desc: Build WASM for all targets (web, bundler, nodejs, deno)
     dir: crates/kreuzberg-wasm
+    env:
+      RUSTFLAGS:
     cmds:
       - pnpm run build:all
 
   build:bindings:
     desc: Build WASM bindings for benchmarking
+    env:
+      # Ensure RUSTFLAGS is unset for benchmarking build to isolate WASM-specific flags
+      RUSTFLAGS:
     cmds:
       - bash scripts/benchmarks/build-wasm-bindings.sh
 

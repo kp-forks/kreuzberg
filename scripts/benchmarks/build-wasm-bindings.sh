@@ -27,5 +27,18 @@ fi
 
 rustup target add wasm32-unknown-unknown
 
+# Save and clear RUSTFLAGS to prevent WASM-specific linker flags from leaking to non-WASM builds
+# The WASM .cargo/config.toml specifies its own rustflags for the wasm32-unknown-unknown target.
+# When profiling is enabled, workflow-level RUSTFLAGS (e.g., "-g" for debug symbols) should not
+# apply to WASM builds, and any flags added during the WASM build should not leak to subsequent
+# non-WASM builds (Go, Java, C#) that use different linkers.
+saved_rustflags="${RUSTFLAGS:-}"
+unset RUSTFLAGS
+
 pnpm install
 pnpm -C crates/kreuzberg-wasm run build
+
+# Restore original RUSTFLAGS for subsequent non-WASM builds
+if [ -n "$saved_rustflags" ]; then
+	export RUSTFLAGS="$saved_rustflags"
+fi
