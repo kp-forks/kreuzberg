@@ -256,15 +256,15 @@ runs:
         BINDING_NAME="${{ inputs.binding-name }}"
         CACHE_PATHS="${{ inputs.cache-paths }}"
 
-        # Prepare paths for validation script
-        ARTIFACT_PATHS=""
+        # Prepare paths as array for proper argument handling
+        declare -a ARTIFACT_PATHS
         while IFS= read -r path; do
           if [[ -n "$path" ]]; then
-            ARTIFACT_PATHS="$ARTIFACT_PATHS $path"
+            ARTIFACT_PATHS+=("$path")
           fi
         done <<< "$CACHE_PATHS"
 
-        if "$VALIDATE_SCRIPT" "$BINDING_NAME" $ARTIFACT_PATHS; then
+        if "$VALIDATE_SCRIPT" "$BINDING_NAME" "${ARTIFACT_PATHS[@]}"; then
           echo "validated=true" >> "$GITHUB_OUTPUT"
           echo "✓ Artifacts validation passed"
         else
@@ -312,15 +312,15 @@ runs:
         BINDING_NAME="${{ inputs.binding-name }}"
         CACHE_PATHS="${{ inputs.cache-paths }}"
 
-        # Prepare paths for validation script
-        ARTIFACT_PATHS=""
+        # Prepare paths as array for proper argument handling
+        declare -a ARTIFACT_PATHS
         while IFS= read -r path; do
           if [[ -n "$path" ]]; then
-            ARTIFACT_PATHS="$ARTIFACT_PATHS $path"
+            ARTIFACT_PATHS+=("$path")
           fi
         done <<< "$CACHE_PATHS"
 
-        if "$VALIDATE_SCRIPT" "$BINDING_NAME" $ARTIFACT_PATHS; then
+        if "$VALIDATE_SCRIPT" "$BINDING_NAME" "${ARTIFACT_PATHS[@]}"; then
           echo "✓ Built artifacts validation passed"
         else
           echo "❌ Built artifacts validation failed"
