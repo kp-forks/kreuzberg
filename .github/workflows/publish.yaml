@@ -2182,16 +2182,16 @@ jobs:
           echo "=== Build target: ${TARGET} ==="
           echo "=== Runner OS: ${{ runner.os }} ==="
           echo ""
-          echo "=== All library files in target ==="
-          find packages/elixir/native/kreuzberg_rustler/target -type f \( -name "*.so" -o -name "*.dylib" -o -name "*.dll" -o -name "libkreuzberg*" -o -name "kreuzberg_rustler*" \) 2>/dev/null | head -30 || echo "No libraries found"
+          echo "=== All library files in workspace target ==="
+          find target -type f \( -name "*.so" -o -name "*.dylib" -o -name "*.dll" -o -name "libkreuzberg*" -o -name "kreuzberg_rustler*" \) 2>/dev/null | head -30 || echo "No libraries found"
           echo ""
           echo "=== Expected location: target/${TARGET}/release/ ==="
-          for f in packages/elixir/native/kreuzberg_rustler/target/"${TARGET}"/release/*kreuzberg*; do
+          for f in target/"${TARGET}"/release/*kreuzberg*; do
             [ -e "$f" ] && ls -la "$f" || true
           done 2>/dev/null || echo "Directory or files do not exist"
           echo ""
           echo "=== Fallback location: target/release/ ==="
-          for f in packages/elixir/native/kreuzberg_rustler/target/release/*kreuzberg*; do
+          for f in target/release/*kreuzberg*; do
             [ -e "$f" ] && ls -la "$f" || true
           done 2>/dev/null || echo "No fallback dir"
 
@@ -2217,17 +2217,17 @@ jobs:
           ARTIFACT_NAME="libkreuzberg_rustler-v${VERSION}-nif-${NIF_VERSION}-${TARGET}.${EXT}"
           TARBALL="${ARTIFACT_NAME}.tar.gz"
 
-          # Try expected location first, fallback to root release dir
-          LIB_PATH="packages/elixir/native/kreuzberg_rustler/target/${TARGET}/release/${LIB_NAME}"
+          # Try expected location first (workspace target dir), fallback to root release dir
+          LIB_PATH="target/${TARGET}/release/${LIB_NAME}"
           if [[ ! -f "$LIB_PATH" ]]; then
             echo "Library not found at expected path, checking fallback..."
-            LIB_PATH="packages/elixir/native/kreuzberg_rustler/target/release/${LIB_NAME}"
+            LIB_PATH="target/release/${LIB_NAME}"
           fi
 
           if [[ ! -f "$LIB_PATH" ]]; then
             echo "ERROR: Library not found at either location"
-            echo "Expected: packages/elixir/native/kreuzberg_rustler/target/${TARGET}/release/${LIB_NAME}"
-            echo "Fallback: packages/elixir/native/kreuzberg_rustler/target/release/${LIB_NAME}"
+            echo "Expected: target/${TARGET}/release/${LIB_NAME}"
+            echo "Fallback: target/release/${LIB_NAME}"
             exit 1
           fi
 
@@ -2259,10 +2259,10 @@ jobs:
           ARTIFACT_NAME="libkreuzberg_rustler-v${VERSION}-nif-${NIF_VERSION}-${TARGET}.${EXT}"
           TARBALL="${ARTIFACT_NAME}.tar.gz"
 
-          # Try expected location first, fallback to root release dir
-          LIB_PATH="packages/elixir/native/kreuzberg_rustler/target/${TARGET}/release/${LIB_NAME}"
+          # Try expected location first (workspace target dir), fallback to root release dir
+          LIB_PATH="target/${TARGET}/release/${LIB_NAME}"
           if [[ ! -f "$LIB_PATH" ]]; then
-            LIB_PATH="packages/elixir/native/kreuzberg_rustler/target/release/${LIB_NAME}"
+            LIB_PATH="target/release/${LIB_NAME}"
           fi
 
           if [[ ! -f "$LIB_PATH" ]]; then
